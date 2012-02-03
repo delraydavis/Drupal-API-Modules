@@ -3,7 +3,7 @@ include_once('lib/ThreeScaleClient.php');
 function connector_3scale_menu() {
 	$items['admin/api/connector'] = array(
 		'page callback' => 'drupal_get_form',
-		'title' => 'Page API Services Configuration',
+		'title' => '3scale Services Configuration',
 		'description' => 'this is the settings area for the 3scale connector module',
 		'access arguments' => array('access administration pages'),
 		'page arguments' => array('connector_3scale_settings'),
