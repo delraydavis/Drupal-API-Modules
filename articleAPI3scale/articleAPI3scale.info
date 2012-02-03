@@ -1,0 +1,10 @@
+name = Article API 3scale module
+description = This is module will allow for api access to the drupal pages with 3scale authorization
+package = 3scale API
+version = VERSION
+core = 7.x
+files[] = articleAPI3scale.admin.inc
+files[] = articleAPI3scale.install
+configure = admin/api/article
+dependencies[] = block
+dependencies[] = connector

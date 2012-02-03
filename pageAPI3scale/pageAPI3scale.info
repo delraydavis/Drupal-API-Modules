@@ -1,0 +1,10 @@
+name = Page API 3scale module
+description = This is module will allow for api access to the drupal pages with 3scale authorization
+package = 3scale API
+version = VERSION
+core = 7.x
+files[] = pageAPI3scale.admin.inc
+files[] = pageAPI3scale.install
+configure = admin/api/page
+dependencies[] = block
+dependencies[] = connector
