@@ -1,4 +1,4 @@
-name = 3scale Connector
+name = Connector 3scale
 description = This is module will allow for api access to the drupal pages with 3scale authorization
 package = 3scale API
 version = VERSION
