@@ -7,4 +7,4 @@ files[] = articleAPI3scale.admin.inc
 files[] = articleAPI3scale.install
 configure = admin/api/article
 dependencies[] = block
-dependencies[] = connector
+dependencies[] = 3scale Connector

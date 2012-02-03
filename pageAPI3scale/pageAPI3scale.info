@@ -7,4 +7,4 @@ files[] = pageAPI3scale.admin.inc
 files[] = pageAPI3scale.install
 configure = admin/api/page
 dependencies[] = block
-dependencies[] = connector
+dependencies[] = 3scale Connector
