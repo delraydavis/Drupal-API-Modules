@@ -34,30 +34,30 @@ function articleAPI3scale_help($path, $arg) {
   $output = '';  //declare your output variable
   switch ($path) {
     case "admin/help#articleAPI3scale":
-      $output = '<h1>Article API Documentation</h1><ul><li><a href="#create">Create</a></li><li><a href="#retrieve">Retrieve</a></li><li><a href="#update">Update</a></li></ul>';
+      $output = '<h1>Article API Documentation</h1><ul><li><a href="#create">Create</a></li><li><a href="#retrieve">Retrieve</a></li><li><a href="#update">Update</a></li><li><a href="#delete">Delete</a></li></ul>';
 	  $output .= '<h2>API client script examples</h2><a name="create"></a><br /><br /><h3>Create</h3><p>';
 	  $output .= '$app_id = "APP ID";<br />';
 	  $output .= '$app_key = "APP KEY";<br /><br />';
 	  $output .= '$url = "mydrupalinstallation.com/api/page";<br /><br />';
 	  $output .= '$fields = array(<br />';
-	        $output .= '"title"=>"My Title",<br />';
-	        $output .= '"summary"=>"My Summary",<br />';
-	        $output .= '"body"=>"Body",<br />';
-	        $output .= '"format"=>"Format",<br />';
-	        $output .= '"path"=>"Path",<br />';
-	        $output .= '"uid"=>"UID",<br />';
-	        $output .= '"app_id" => $app_id,<br />';
-	        $output .= '"app_key" => $app_key<br />';
-	    $output .= ');<br /><br />';
-		$output .= '$fields_string = "";<br /><br />';
-		$output .= 'foreach($fields as $key=>$value) { $fields_string .= $key."=".$value."&"; }<br /><br />';
-		$output .= 'rtrim($fields_string,"&");<br /><br />';
-		$output .= '$ch = curl_init();<br /><br />';
-		$output .= 'curl_setopt($ch,CURLOPT_URL,$url);<br />';
-		$output .= 'curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);<br /><br />';
-		$output .= '$result = curl_exec($ch);<br />';
-		$output .= 'var_dump($result);<br /><br />';
-		$output .= 'curl_close($ch);<br /><br />';
+      $output .= '"title"=>"My Title",<br />';
+      $output .= '"summary"=>"My Summary",<br />';
+      $output .= '"body"=>"Body",<br />';
+      $output .= '"format"=>"Format",<br />';
+      $output .= '"path"=>"Path",<br />';
+      $output .= '"uid"=>"UID",<br />';
+      $output .= '"app_id" => $app_id,<br />';
+	  $output .= '"app_key" => $app_key<br />';
+      $output .= ');<br /><br />';
+  	  $output .= '$fields_string = "";<br /><br />';
+	  $output .= 'foreach($fields as $key=>$value) { $fields_string .= $key."=".$value."&"; }<br /><br />';
+	  $output .= 'rtrim($fields_string,"&");<br /><br />';
+	  $output .= '$ch = curl_init();<br /><br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_URL,$url);<br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);<br /><br />';
+	  $output .= '$result = curl_exec($ch);<br />';
+	  $output .= 'var_dump($result);<br /><br />';
+	  $output .= 'curl_close($ch);<br /><br />';
 	  $output .= '</p>';      
       $output .= '<a name="retrieve"></a><br /><br /><h3>Retrieve</h3><p>$app_id = "APP ID";<br />$app_key = "APP KEY";<br /><br />';
       $output .= '$URL = "mydrupalinstallation.com/api/articles&";<br /><br />';
@@ -68,8 +68,7 @@ function articleAPI3scale_help($path, $arg) {
       $output .= 'curl_setopt($curl_handle, CURLOPT_URL, $URL);<br />';
       $output .= 'curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);<br /><br />';
       $output .= '$response = curl_exec($curl_handle);<br />';
-      $output .= 'curl_close($curl_handle);<br /><br />';
-      
+      $output .= 'curl_close($curl_handle);<br /><br />';     
       $output .= '<a name="update"></a><br /><br /><h3>Update</h3><p>$app_id = "APP ID";<br />$app_key = "APP KEY";<br /><br />';
       $output .= '$URL = "mydrupalinstallation.com/api/article/8";<br /><br />';
       $output .= '$fields = array(<br />';
@@ -82,26 +81,39 @@ function articleAPI3scale_help($path, $arg) {
       $output .= '"app_id"=>$app_id,<br />';
       $output .= '"app_key"=>$app_key<br />';
       $output .= '};<br /><br />'
-      
-
-$output .= '$fields_string = "";<br />';
-$output .= 'foreach($fields as $key=>$value) { $fields_string .= $key."=".$value."&"; }<br />';
-$output .= 'rtrim($fields_string,"&");<br /><br />';
-
-$output .= '$ch = curl_init();<br /><br />';
-
-$output .= 'curl_setopt($ch,CURLOPT_URL,$url);<br /><br />';
-
-$output .= 'curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");<br />';
-$output .= 'curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);<br /><br />';
-
-$output .= '$result = curl_exec($ch);<br /><br />';
-
-$output .= 'var_dump($result);<br /><br />';
-
-$output .= 'curl_close($ch);<br /><br />';
-      
+      $output .= '$fields_string = "";<br />';
+	  $output .= 'foreach($fields as $key=>$value) { $fields_string .= $key."=".$value."&"; }<br />';
+	  $output .= 'rtrim($fields_string,"&");<br /><br />';
+	  $output .= '$ch = curl_init();<br /><br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_URL,$url);<br /><br />';
+	  $output .= 'curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");<br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);<br /><br />';
+	  $output .= '$result = curl_exec($ch);<br /><br />';
+	  $output .= 'var_dump($result);<br /><br />';
+      $output .= 'curl_close($ch);<br /><br />';
       $output .= 'var_dump($response);</p>';
+      $output .= '<a name="delete"></a><br /><br /><h3>Delete</h3><p>$app_id = "APP ID";<br />$app_key = "APP KEY";<br /><br />';
+	  $output .= '$url = "mydrupalinstallation.com/api/article/8"<br /><br />;';
+	  $output .= '$fields = array(<br />';
+      $output .= '"title"=>"title",<br />';
+      $output .= '"summary"=>"my summary",<br />';
+      $output .= '"body"=>"my body",<br />';
+      $output .= '"format"=>"plain_text",<br />';
+      $output .= '"path"=>"my path",<br />';
+      $output .= '"uid"=>"uid",<br />';
+      $output .= '"app_id" => $app_id,<br />';
+      $output .= '"app_key" => $app_key<br />';
+      $output .= ');<br /><br />';
+	  $output .= '$fields_string = "";<br />';
+	  $output .= 'foreach($fields as $key=>$value) { $fields_string .= $key."=".$value."&"; }<br />';
+	  $output .= 'rtrim($fields_string,"&");<br /><br />';
+  	  $output .= '$ch = curl_init();<br /><br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_URL,$url);<br /><br />';
+	  $output .= 'curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");<br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);<br /><br />';
+	  $output .= '$result = curl_exec($ch);<br /><br />';
+	  $output .= 'var_dump($result);<br /><br />';
+	  $output .= 'curl_close($ch);';
       break;
   }
   return $output;
