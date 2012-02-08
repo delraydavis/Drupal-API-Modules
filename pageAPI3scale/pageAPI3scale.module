@@ -1,0 +1,190 @@
+<?php
+//include_once('lib/ThreeScaleClient.php');
+
+/**
+*Implements hook_menu()
+*/
+function pageAPI3scale_menu() {
+    $items['api/pages'] = array(
+		'page callback' => 'pageAPI3scale_view',
+		'title' => '',
+		'description' => 'this page will handle all multi-request api services for the page api',
+		'access arguments' => array('access content'),
+		'file' => 'pageAPI3scale.api.inc'
+    );
+    $items['api/page'] = array(
+		'page callback' => 'pageAPI3scale_view',
+		'title' => '',
+		'description' => 'This page will handle single request api services for the page api',
+		'access arguments' => array('access content'),
+		'file' => 'pageAPI3scale.api.inc'
+	);
+	$items['admin/api/page'] = array(
+		'page callback' => 'drupal_get_form',
+		'title' => 'Page API Services Configuration',
+		'description' => 'this is the settings area for the API services module',
+		'access arguments' => array('access administration pages'),
+		'page arguments' => array('pageAPI3scale_settings'),
+		'file' => 'pageAPI3scale.admin.inc',
+		'file path' => drupal_get_path('module','pageAPI3scale'),
+	);	
+    return $items;
+}
+
+
+function pageAPI3scale_view( $identifier = 'all') {
+
+	//$provider_key = "";
+
+	$client = new ThreeScaleClient(variable_get('API_3scale_provider_id'));
+	
+	
+
+	$myData = SimpleRest::processRequest();
+	
+	$data = $myData->getRequestVars();
+	
+	$authorize = $client->authorize($data['app_id'], $data['app_key']);
+	
+	//create the structure for the response
+	$response = Array();
+	
+	//perform different actions based on the type of API request sent
+	switch($myData->getMethod())  
+	{  
+	    case 'get':
+	    
+
+	    
+	    	if(variable_get('pageAPI_retrieve') && $authorize->isSuccess()){
+	    	
+	    	
+	    	
+	    	
+	    		if($identifier == 'all'){
+	    			//retrieve the complete list of pages
+					$pages = new Pages();
+					
+					$response = Array();
+					
+					$arrayParse = $pages->getPages();
+					
+					for($f = 0; $f<count($arrayParse)-1; $f++){
+						$response[$f]['id'] = $arrayParse[$f]->id;
+						$response[$f]['title'] = $arrayParse[$f]->title;
+						$response[$f]['type'] = $arrayParse[$f]->type;
+						$response[$f]['body'] = $arrayParse[$f]->body;
+						$response[$f]['format'] = $arrayParse[$f]->format;
+						
+					}
+					return SimpleRest::sendResponse('',json_encode($response),'');
+				
+				}elseif(is_numeric($identifier)){
+					
+					
+					
+					
+				
+		        	$page = new Page($identifier);
+		        	if($page->exists == true){
+						$response['id'] = $page->id;
+						$response['title'] = $page->title;
+						$response['type'] = $page->type;
+						$response['body'] = $page->body;
+						$response['format'] = $page->format;
+						$response['message'] = "Page found";
+						$response['config'] = variable_get('pageAPI_retrieve');
+						return SimpleRest::sendResponse('',json_encode($response),'');
+					}else{
+						$response['message'] = "Page not found";
+						return SimpleRest::sendResponse('404',json_encode($response),'');
+					}						
+				}else{
+					return SimpleRest::sendResponse('404','','');
+				}
+				
+				
+				
+				
+			}else{
+				return SimpleRest::sendResponse('403',json_encode(array('message' => 'This method is not enabled by the site administrator')),'');
+			}
+	        break;  
+	    case 'post':  
+	    	if(variable_get('pageAPI_create') && $authorize->isSuccess()){
+
+		    	
+			    $node = new stdClass(); // We create a new node object
+				$node->type = "page"; // Or any other content type you want
+				$node->title = $data['title'];
+				$node->language = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+				
+				$node->path = array('alias' => $data['path']); // Setting a node path
+				node_object_prepare($node); // Set some default values.
+	
+				$node->uid = $data['uid']; // Or any id you wish
+				
+				// Let's add standard body field
+				$node->body[$node->language][0]['value'] = $data['body'];
+				$node->body[$node->language][0]['summary'] = $data['summary'];
+				$node->body[$node->language][0]['format'] = $data['format']; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+				
+				$node = node_submit($node); // Prepare node for a submit
+				node_save($node); // After this call we'll get a nid
+				
+				
+				
+				return SimpleRest::sendResponse('201',json_encode($node),'');
+			}else{
+				return SimpleRest::sendResponse('403',json_encode(array('message' => 'This method is not enabled by the site administrator')),'');
+			}					
+		    break;  
+	    case 'put':
+	    	if(variable_get('pageAPI_update') && $authorize->isSuccess()){
+	    		if($identifier != 'all'){	    		
+
+			    	
+		  			$node = node_load($identifier);
+		  			
+		  			if(array_key_exists ( 'title' , $data )){
+		  				$node->title = $data['title'];
+		  			}
+		  			if(array_key_exists ( 'body' , $data )){
+		  				$node->body[$node->language][0]['value'] = $data['body'];
+		  			}	  			
+		  			if(array_key_exists ( 'summary' , $data )){
+		  				$node->body[$node->language][0]['summary'] = $data['summary'];
+		  			}		  			
+		  			if(array_key_exists ( 'format' , $data )){
+		  				$node->body[$node->language][0]['format'] = $data['format'];
+		  			}
+		  			if(array_key_exists ( 'path' , $data )){
+		  				$node->path = array('alias' => $data['path']);
+		  			}
+		  			node_save($node);
+		  		
+		    	}else{
+					$response = array('message' => 'submitted update candidate not found');
+		    		return SimpleRest::sendResponse('404',json_encode($response),'');	    	
+		    	}
+			}else{
+				return SimpleRest::sendResponse('403',json_encode(array('message' => 'This method is not enabled by the site administrator')),'');
+			}		    	
+	    	break;
+	    case 'delete':
+	    	if(variable_get('pageAPI_update') && $authorize->isSuccess()){
+		    	if($identifier != 'all'){
+		    		node_delete($identifier);
+		    		$response = array('message' => 'deleted successfully');
+		    		return SimpleRest::sendResponse('',json_encode($response),'');
+		    	}else{
+		    		$response = array('message' => 'submitted deletion candidate not found');
+		    		return SimpleRest::sendResponse('404',json_encode($response),'');
+		    	}
+		    }else{
+		    	return SimpleRest::sendResponse('403',json_encode(array('message' => 'This method is not enabled by the site administrator')),'');
+		    }
+	    	break;
+	}  
+   	
+}

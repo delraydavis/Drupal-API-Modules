@@ -1,0 +1,8 @@
+name = Connector 3scale
+description = This is module will allow for api access to the drupal pages with 3scale authorization
+package = 3scale API
+version = VERSION
+core = 7.x
+files[] = connector_3scale.admin.inc
+configure = admin/api/connector
+dependencies[] = block 

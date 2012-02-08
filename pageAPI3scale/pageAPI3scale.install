@@ -1,0 +1,30 @@
+<?php
+	function pageAPI3scale_uninstall(){
+		variable_del('pageAPI_retrieve');
+		variable_del('pageAPI_update');
+		variable_del('pageAPI_create');
+		variable_del('pageAPI_delete');
+		
+		cache_clear_all();
+	}
+	if(!variable_get('API_3scale_provider_id')){
+		function pageAPI_install(){
+			variable_set('API_3scale_provider_id','');
+			variable_set('pageAPI_retrieve',true);
+			variable_set('pageAPI_update',true);
+			variable_set('pageAPI_create',true);
+			variable_set('pageAPI_delete',true);
+			
+	    	cache_clear_all();
+		}
+	}else{
+		function pageAPI_install(){
+			variable_set('pageAPI_retrieve',true);
+			variable_set('pageAPI_update',true);
+			variable_set('pageAPI_create',true);
+			variable_set('pageAPI_delete',true);
+			
+	    	cache_clear_all();
+		}
+	}
+?>

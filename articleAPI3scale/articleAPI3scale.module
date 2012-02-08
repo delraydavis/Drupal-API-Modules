@@ -1,0 +1,276 @@
+<?php
+
+/**
+*Implements hook_menu()
+*/
+function articleAPI3scale_menu() {
+    $items['api/articles'] = array(
+		'page callback' => 'articleAPI3scale_view',
+		'title' => '',
+		'description' => 'this page will handle all multi-request api services for the article api',
+		'access arguments' => array('access content'),
+		'file' => 'articleAPI3scale.api.inc'
+    );
+    $items['api/article'] = array(
+		'page callback' => 'articleAPI3scale_view',
+		'title' => '',
+		'description' => 'This page will handle single request api services for the article api',
+		'access arguments' => array('access content'),
+		'file' => 'articleAPI3scale.api.inc'
+	);
+	$items['admin/api/article'] = array(
+		'page callback' => 'drupal_get_form',
+		'title' => 'Article API Services Configuration',
+		'description' => 'this is the settings area for the API services module',
+		'access arguments' => array('access administration pages'),
+		'page arguments' => array('articleAPI3scale_settings'),
+		'file' => 'articleAPI3scale.admin.inc',
+		'file path' => drupal_get_path('module','articleAPI3scale'),
+	);	
+    return $items;
+}
+
+function articleAPI3scale_help($path, $arg) {
+  $output = '';  //declare your output variable
+  switch ($path) {
+    case "admin/help#articleAPI3scale":
+      $output = '<h1>Article API Documentation</h1><ul><li><a href="#create">Create</a></li><li><a href="#retrieve">Retrieve</a></li><li><a href="#update">Update</a></li><li><a href="#delete">Delete</a></li></ul>';
+	  $output .= '<h2>API client script examples</h2><a name="create"></a><br /><br /><h3>Create</h3><p>';
+	  $output .= '$app_id = "APP ID";<br />';
+	  $output .= '$app_key = "APP KEY";<br /><br />';
+	  $output .= '$url = "mydrupalinstallation.com/api/page";<br /><br />';
+	  $output .= '$fields = array(<br />';
+      $output .= '"title"=>"My Title",<br />';
+      $output .= '"summary"=>"My Summary",<br />';
+      $output .= '"body"=>"Body",<br />';
+      $output .= '"format"=>"Format",<br />';
+      $output .= '"path"=>"Path",<br />';
+      $output .= '"uid"=>"UID",<br />';
+      $output .= '"app_id" => $app_id,<br />';
+	  $output .= '"app_key" => $app_key<br />';
+      $output .= ');<br /><br />';
+  	  $output .= '$fields_string = "";<br /><br />';
+	  $output .= 'foreach($fields as $key=>$value) { $fields_string .= $key."=".$value."&"; }<br /><br />';
+	  $output .= 'rtrim($fields_string,"&");<br /><br />';
+	  $output .= '$ch = curl_init();<br /><br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_URL,$url);<br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);<br /><br />';
+	  $output .= '$result = curl_exec($ch);<br />';
+	  $output .= 'var_dump($result);<br /><br />';
+	  $output .= 'curl_close($ch);<br /><br />';
+	  $output .= '</p>';      
+      $output .= '<a name="retrieve"></a><br /><br /><h3>Retrieve</h3><p>$app_id = "APP ID";<br />$app_key = "APP KEY";<br /><br />';
+      $output .= '$URL = "mydrupalinstallation.com/api/articles&";<br /><br />';
+      $output .= '$QueryString = "app_id=" . $app_id;<br />';
+      $output .= '$QueryString .= "&app_key=" . $app_key;<br /><br />';
+      $output .= '$URL .= $QueryString;<br /><br />';
+      $output .= '$curl_handle = curl_init();<br />';
+      $output .= 'curl_setopt($curl_handle, CURLOPT_URL, $URL);<br />';
+      $output .= 'curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);<br /><br />';
+      $output .= '$response = curl_exec($curl_handle);<br />';
+      $output .= 'curl_close($curl_handle);<br /><br />';     
+      $output .= '<a name="update"></a><br /><br /><h3>Update</h3><p>$app_id = "APP ID";<br />$app_key = "APP KEY";<br /><br />';
+      $output .= '$URL = "mydrupalinstallation.com/api/article/8";<br /><br />';
+      $output .= '$fields = array(<br />';
+      $output .= '"title"=>"title",<br />';
+      $output .= '"summary"=>"my summary",<br />';
+      $output .= '"body"=>"my body",<br />';
+      $output .= '"format"=>"plain_text",<br />';
+      $output .= '"path"=>"my/path",<br />';
+      $output .= '"uid"=>"uid", //author ID<br />';
+      $output .= '"app_id"=>$app_id,<br />';
+      $output .= '"app_key"=>$app_key<br />';
+      $output .= '};<br /><br />'
+      $output .= '$fields_string = "";<br />';
+	  $output .= 'foreach($fields as $key=>$value) { $fields_string .= $key."=".$value."&"; }<br />';
+	  $output .= 'rtrim($fields_string,"&");<br /><br />';
+	  $output .= '$ch = curl_init();<br /><br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_URL,$url);<br /><br />';
+	  $output .= 'curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");<br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);<br /><br />';
+	  $output .= '$result = curl_exec($ch);<br /><br />';
+	  $output .= 'var_dump($result);<br /><br />';
+      $output .= 'curl_close($ch);<br /><br />';
+      $output .= 'var_dump($response);</p>';
+      $output .= '<a name="delete"></a><br /><br /><h3>Delete</h3><p>$app_id = "APP ID";<br />$app_key = "APP KEY";<br /><br />';
+	  $output .= '$url = "mydrupalinstallation.com/api/article/8"<br /><br />;';
+	  $output .= '$fields = array(<br />';
+      $output .= '"title"=>"title",<br />';
+      $output .= '"summary"=>"my summary",<br />';
+      $output .= '"body"=>"my body",<br />';
+      $output .= '"format"=>"plain_text",<br />';
+      $output .= '"path"=>"my path",<br />';
+      $output .= '"uid"=>"uid",<br />';
+      $output .= '"app_id" => $app_id,<br />';
+      $output .= '"app_key" => $app_key<br />';
+      $output .= ');<br /><br />';
+	  $output .= '$fields_string = "";<br />';
+	  $output .= 'foreach($fields as $key=>$value) { $fields_string .= $key."=".$value."&"; }<br />';
+	  $output .= 'rtrim($fields_string,"&");<br /><br />';
+  	  $output .= '$ch = curl_init();<br /><br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_URL,$url);<br /><br />';
+	  $output .= 'curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");<br />';
+	  $output .= 'curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);<br /><br />';
+	  $output .= '$result = curl_exec($ch);<br /><br />';
+	  $output .= 'var_dump($result);<br /><br />';
+	  $output .= 'curl_close($ch);';
+      break;
+  }
+  return $output;
+}
+
+function articleAPI3scale_view( $identifier = 'all') {
+
+	//$provider_key = "";
+
+	$client = new ThreeScaleClient(variable_get('API_3scale_provider_id'));
+	
+	
+
+	$myData = SimpleRest::processRequest();
+	
+	$data = $myData->getRequestVars();
+	
+	$authorize = $client->authorize($data['app_id'], $data['app_key']);
+	
+	//create the structure for the response
+	$response = Array();
+	
+	//perform different actions based on the type of API request sent
+	switch($myData->getMethod())  
+	{  
+	    case 'get':
+	    
+
+	    
+	    	if(variable_get('articleAPI_retrieve') && $authorize->isSuccess()){
+	    	
+	    	
+	    	
+	    	
+	    		if($identifier == 'all'){
+	    			//retrieve the complete list of pages
+					$articles = new Articles();
+					
+					$response = Array();
+					
+					$arrayParse = $articles->getArticles();
+					
+					for($f = 0; $f<count($arrayParse)-1; $f++){
+						$response[$f]['id'] = $arrayParse[$f]->id;
+						$response[$f]['title'] = $arrayParse[$f]->title;
+						$response[$f]['type'] = $arrayParse[$f]->type;
+						$response[$f]['body'] = $arrayParse[$f]->body;
+						$response[$f]['format'] = $arrayParse[$f]->format;
+						
+					}
+					return SimpleRest::sendResponse('',json_encode($response),'');
+				
+				}elseif(is_numeric($identifier)){
+					
+					
+					
+					
+				
+		        	$article = new Article($identifier);
+		        	if($article->exists == true){
+						$response['id'] = $article->id;
+						$response['title'] = $article->title;
+						$response['type'] = $article->type;
+						$response['body'] = $article->body;
+						$response['format'] = $article->format;
+						$response['message'] = "Article found";
+						return SimpleRest::sendResponse('',json_encode($response),'');
+					}else{
+						$response['message'] = "Article not found";
+						return SimpleRest::sendResponse('404',json_encode($response),'');
+					}						
+				}else{
+					return SimpleRest::sendResponse('404','','');
+				}
+				
+				
+				
+				
+			}else{
+				return SimpleRest::sendResponse('403',json_encode(array('message' => 'This method is not enabled by the site administrator')),'');
+			}
+	        break;  
+	    case 'post':  
+	    	if(variable_get('articleAPI_create') && $authorize->isSuccess()){
+
+		    	
+			    $node = new stdClass(); // We create a new node object
+				$node->type = "article"; // Or any other content type you want
+				$node->title = $data['title'];
+				$node->language = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+				
+				$node->path = array('alias' => $data['path']); // Setting a node path
+				node_object_prepare($node); // Set some default values.
+	
+				$node->uid = $data['uid']; // Or any id you wish
+				
+				// Let's add standard body field
+				$node->body[$node->language][0]['value'] = $data['body'];
+				$node->body[$node->language][0]['summary'] = $data['summary'];
+				$node->body[$node->language][0]['format'] = $data['format']; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+				
+				$node = node_submit($node); // Prepare node for a submit
+				node_save($node); // After this call we'll get a nid
+				
+				
+				
+				return SimpleRest::sendResponse('201',json_encode($node),'');
+			}else{
+				return SimpleRest::sendResponse('403',json_encode(array('message' => 'This method is not enabled by the site administrator')),'');
+			}					
+		    break;  
+	    case 'put':
+	    	if(variable_get('articleAPI_update') && $authorize->isSuccess()){
+	    		if($identifier != 'all'){	    		
+
+			    	
+		  			$node = node_load($identifier);
+		  			
+		  			if(array_key_exists ( 'title' , $data )){
+		  				$node->title = $data['title'];
+		  			}
+		  			if(array_key_exists ( 'body' , $data )){
+		  				$node->body[$node->language][0]['value'] = $data['body'];
+		  			}	  			
+		  			if(array_key_exists ( 'summary' , $data )){
+		  				$node->body[$node->language][0]['summary'] = $data['summary'];
+		  			}		  			
+		  			if(array_key_exists ( 'format' , $data )){
+		  				$node->body[$node->language][0]['format'] = $data['format'];
+		  			}
+		  			if(array_key_exists ( 'path' , $data )){
+		  				$node->path = array('alias' => $data['path']);
+		  			}
+		  			node_save($node);
+		  		
+		    	}else{
+					$response = array('message' => 'submitted update candidate not found');
+		    		return SimpleRest::sendResponse('404',json_encode($response),'');	    	
+		    	}
+			}else{
+				return SimpleRest::sendResponse('403',json_encode(array('message' => 'This method is not enabled by the site administrator')),'');
+			}		    	
+	    	break;
+	    case 'delete':
+	    	if(variable_get('articleAPI_update') && $authorize->isSuccess()){
+		    	if($identifier != 'all'){
+		    		node_delete($identifier);
+		    		$response = array('message' => 'deleted successfully');
+		    		return SimpleRest::sendResponse('',json_encode($response),'');
+		    	}else{
+		    		$response = array('message' => 'submitted deletion candidate not found');
+		    		return SimpleRest::sendResponse('404',json_encode($response),'');
+		    	}
+		    }else{
+		    	return SimpleRest::sendResponse('403',json_encode(array('message' => 'This method is not enabled by the site administrator')),'');
+		    }
+	    	break;
+	}  
+   	
+}
