@@ -34,7 +34,7 @@ function pageAPI3scale_menu() {
 function pageAPI3scale_help($path, $arg) {
   $output = '';  //declare your output variable
   switch ($path) {
-    case "admin/help#articleAPI3scale":
+    case "admin/help#pageAPI3scale":
       $output = '<h1>Page API Documentation</h1><ul><li><a href="#create">Create</a></li><li><a href="#retrieve">Retrieve</a></li><li><a href="#update">Update</a></li><li><a href="#delete">Delete</a></li></ul>';
 	  $output .= '<h2>API client script examples</h2><a name="create"></a><br /><br /><h3>Create</h3><p>';
 	  $output .= '$app_id = "APP ID";<br />';
