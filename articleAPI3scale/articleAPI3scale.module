@@ -38,7 +38,7 @@ function articleAPI3scale_help($path, $arg) {
 	  $output .= '<h2>API client script examples</h2><a name="create"></a><br /><br /><h3>Create</h3><p>';
 	  $output .= '$app_id = "APP ID";<br />';
 	  $output .= '$app_key = "APP KEY";<br /><br />';
-	  $output .= '$url = "mydrupalinstallation.com/api/page";<br /><br />';
+	  $output .= '$url = "mydrupalinstallation.com/api/article";<br /><br />';
 	  $output .= '$fields = array(<br />';
       $output .= '"title"=>"My Title",<br />';
       $output .= '"summary"=>"My Summary",<br />';
