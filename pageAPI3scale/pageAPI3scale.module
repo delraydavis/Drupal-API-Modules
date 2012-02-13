@@ -81,7 +81,7 @@ function pageAPI3scale_help($path, $arg) {
       $output .= '"uid"=>"uid", //author ID<br />';
       $output .= '"app_id"=>$app_id,<br />';
       $output .= '"app_key"=>$app_key<br />';
-      $output .= '};<br /><br />'
+      $output .= '};<br /><br />';
       $output .= '$fields_string = "";<br />';
 	  $output .= 'foreach($fields as $key=>$value) { $fields_string .= $key."=".$value."&"; }<br />';
 	  $output .= 'rtrim($fields_string,"&");<br /><br />';
