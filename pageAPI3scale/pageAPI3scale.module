@@ -79,12 +79,7 @@ function pageAPI3scale_view( $identifier = 'all') {
 					}
 					return SimpleRest::sendResponse('',json_encode($response),'');
 				
-				}elseif(is_numeric($identifier)){
-					
-					
-					
-					
-				
+				}elseif(is_numeric($identifier)){				
 		        	$page = new Page($identifier);
 		        	if($page->exists == true){
 						$response['id'] = $page->id;
@@ -101,11 +96,7 @@ function pageAPI3scale_view( $identifier = 'all') {
 					}						
 				}else{
 					return SimpleRest::sendResponse('404','','');
-				}
-				
-				
-				
-				
+				}				
 			}else{
 				return SimpleRest::sendResponse('403',json_encode(array('message' => 'This method is not enabled by the site administrator')),'');
 			}
